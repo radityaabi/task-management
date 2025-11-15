@@ -1,4 +1,5 @@
 import { Button } from "./components/ui/button";
+import { TrashIcon, EyeIcon } from "lucide-react";
 
 type Task = {
   id: number;
@@ -38,10 +39,18 @@ export function TaskItem({ task }: { task: Task }) {
         <p>{task.isDone ? "✅ Done" : "📝 Todo"}</p>
       </div>
       <div className="flex gap-2">
-        <Button className="mt-2 bg-white text-emerald-600 hover:bg-gray-300">
+        <Button
+          className="mt-2 bg-white text-emerald-600 hover:bg-gray-300"
+          size="sm"
+        >
+          <EyeIcon />
           View
         </Button>
-        <Button className="mt-2 bg-red-500 text-white hover:bg-red-700">
+        <Button
+          className="mt-2 bg-red-500 text-white hover:bg-red-700"
+          size="sm"
+        >
+          <TrashIcon />
           Delete
         </Button>
       </div>
