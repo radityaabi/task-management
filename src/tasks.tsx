@@ -41,14 +41,14 @@ export function TaskItem({ task }: { task: Task }) {
       <div className="flex gap-2">
         <Button
           className="mt-2 bg-white text-emerald-600 hover:bg-gray-300"
-          size="sm"
+          size="xs"
         >
           <EyeIcon />
           View
         </Button>
         <Button
           className="mt-2 bg-red-500 text-white hover:bg-red-700"
-          size="sm"
+          size="xs"
         >
           <TrashIcon />
           Delete
