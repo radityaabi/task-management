@@ -1,3 +1,5 @@
+import { Button } from "./components/ui/button";
+
 type Task = {
   id: number;
   title: string;
@@ -30,9 +32,19 @@ export function Tasks() {
 
 export function TaskItem({ task }: { task: Task }) {
   return (
-    <section className="rounded-lg bg-emerald-500 p-4">
-      <h2 className="text-lg font-bold">{task.title}</h2>
-      <p>{task.isDone ? "✅ Done" : "📝 Todo"}</p>
+    <section className="flex justify-between rounded-lg bg-emerald-500 p-4">
+      <div>
+        <h2 className="text-lg font-bold">{task.title}</h2>
+        <p>{task.isDone ? "✅ Done" : "📝 Todo"}</p>
+      </div>
+      <div className="flex gap-2">
+        <Button className="mt-2 bg-white text-emerald-600 hover:bg-gray-300">
+          View
+        </Button>
+        <Button className="mt-2 bg-red-500 text-white hover:bg-red-700">
+          Delete
+        </Button>
+      </div>
     </section>
   );
 }
