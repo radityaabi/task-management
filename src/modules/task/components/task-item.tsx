@@ -4,7 +4,7 @@ import {
   getPriorityDisplay,
   getCategoryDisplay,
   getDateDisplayInfo,
-} from "@/modules/task/utils/taskHelpers";
+} from "@/modules/task/utils/task-helpers";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ import {
   CheckCircle2,
   Circle,
   PlayCircle,
+  TargetIcon,
 } from "lucide-react";
 
 export function TaskItem({
@@ -164,7 +165,7 @@ export function TaskItem({
             {/* Target Date - Always Show */}
             {dateInfo.targetDate && (
               <div className="flex items-center gap-1">
-                <CalendarIcon className="h-3.5 w-3.5" />
+                <TargetIcon className="h-3.5 w-3.5" />
                 <span>Target {dateInfo.targetDate.formatted}</span>
               </div>
             )}

@@ -1,8 +1,8 @@
-import { useTasks } from "@/modules/task/hooks/useTask";
-import { sortTasks } from "@/modules/task/utils/taskHelpers";
-import { TaskList } from "@/modules/task/components/TaskList";
-import { AddTask } from "@/modules/task/components/AddTask";
-import { CATEGORY_CONFIG } from "@/modules/task/constant/taskConstant";
+import { useTasks } from "@/modules/task/hooks/use-task";
+import { sortTasks } from "@/modules/task/utils/task-helpers";
+import { TaskList } from "@/modules/task/components/task-list";
+import { AddTask } from "@/modules/task/components/add-task";
+import { CATEGORY_CONFIG } from "@/modules/task/constant/task-constant";
 import type { CreateTaskData } from "@/modules/task/types/task";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,7 +54,7 @@ export function Tasks() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col gap-4 space-y-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-4 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
               Tasks
@@ -68,8 +68,8 @@ export function Tasks() {
           {/* Add Task Dialog Trigger */}
           <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="sm:size-default">
-                <PlusIcon className="h-4 w-4 sm:mr-2" />
+              <Button size="sm">
+                <PlusIcon className="h-4 w-4 sm:mr-1" />
                 <span>Add Task</span>
               </Button>
             </DialogTrigger>

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Tasks } from "@/modules/task/components/Tasks";
+import { Tasks } from "@/modules/task/components/tasks";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,14 +18,6 @@ export function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/tasks"
-          element={
-            <Layout>
-              <Tasks />
-            </Layout>
-          }
-        />
         <Route
           path="/"
           element={

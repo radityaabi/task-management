@@ -1,4 +1,4 @@
-export { Tasks } from "./Tasks";
-export { TaskItem } from "./TaskItem";
-export { TaskList } from "./TaskList";
-export { AddTask } from "./AddTask";
+export { Tasks } from "./tasks";
+export { TaskItem } from "./task-item";
+export { TaskList } from "./task-list";
+export { AddTask } from "./add-task";

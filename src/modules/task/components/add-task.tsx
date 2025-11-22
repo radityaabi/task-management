@@ -268,19 +268,6 @@ export function AddTask({ onTaskAdded, onCancel }: AddTaskProps) {
                       >
                         Now
                       </Button>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          const tomorrow = new Date();
-                          tomorrow.setDate(tomorrow.getDate() + 1);
-                          tomorrow.setHours(9, 0, 0, 0);
-                          setDateTime(tomorrow);
-                        }}
-                      >
-                        Tomorrow 9AM
-                      </Button>
                     </div>
                   </div>
                 </div>

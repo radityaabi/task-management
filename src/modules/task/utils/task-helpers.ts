@@ -10,7 +10,7 @@ import {
   STATUS_CONFIG,
   STATUS_WEIGHT,
   PRIORITY_WEIGHT,
-} from "@/modules/task/constant/taskConstant";
+} from "@/modules/task/constant/task-constant";
 import {
   format,
   differenceInCalendarDays,

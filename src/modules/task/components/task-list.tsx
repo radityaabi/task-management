@@ -1,5 +1,5 @@
 import type { Task, TaskListProps } from "@/modules/task/types/task";
-import { TaskItem } from "@/modules/task/components/TaskItem";
+import { TaskItem } from "@/modules/task/components/task-item";
 import { useState } from "react";
 
 export function TaskList({ tasks, onTaskUpdate, onTaskDelete }: TaskListProps) {

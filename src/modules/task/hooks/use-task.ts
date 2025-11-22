@@ -9,7 +9,7 @@ import {
   CreateTaskSchema,
   UpdateTaskSchema,
 } from "@/modules/task/types/task";
-import { initialDataTasks } from "@/modules/task/data/initialDataTasks";
+import { initialDataTasks } from "@/modules/task/data/initial-data-task";
 
 const STORAGE_KEY = "dataTasks";
 

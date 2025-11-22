@@ -20,6 +20,6 @@ export {
   getPriorityDisplay,
   getStatusDisplay,
   sortTasks,
-} from "./utils/taskHelpers";
+} from "./utils/task-helpers";
 
-export { initialDataTasks } from "@/modules/task/data/initialDataTasks";
+export { initialDataTasks } from "@/modules/task/data/initial-data-task";
