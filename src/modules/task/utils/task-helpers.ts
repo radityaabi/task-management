@@ -18,6 +18,7 @@ import {
   isYesterday,
   isTomorrow,
   isPast,
+  formatRelative,
 } from "date-fns";
 
 export const getRelativeTime = (date: Date): string => {
@@ -38,7 +39,7 @@ export const getDateDisplayInfo = (task: Task) => {
   const targetDate = task.targetDate
     ? {
         formatted: format(task.targetDate, "P"),
-        longFormatted: format(task.targetDate, "Pp"),
+        longFormatted: format(task.targetDate, "PPPP"),
         relative: getRelativeTime(task.targetDate),
         isToday: isToday(task.targetDate),
         isYesterday: isYesterday(task.targetDate) && task.status !== "done",
@@ -48,15 +49,15 @@ export const getDateDisplayInfo = (task: Task) => {
 
   const createdAt = task.createdAt
     ? {
-        formatted: format(task.createdAt, "P"),
-        longFormatted: format(task.createdAt, "Pp"),
+        formatted: formatRelative(task.createdAt, new Date()),
+        longFormatted: formatRelative(task.createdAt, new Date()),
       }
     : null;
 
   const updatedAt = task.updatedAt
     ? {
-        formatted: format(task.updatedAt, "P"),
-        longFormatted: format(task.updatedAt, "Pp"),
+        formatted: formatRelative(task.updatedAt, new Date()),
+        longFormatted: formatRelative(task.updatedAt, new Date()),
       }
     : null;
 

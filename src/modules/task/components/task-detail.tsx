@@ -87,7 +87,7 @@ export function TaskDetailPage() {
                 </div>
                 <div>
                   <h1
-                    className={`text-2xl font-bold uppercase ${isDone ? "text-gray-500 line-through" : "text-gray-900"}`}
+                    className={`text-2xl font-bold ${isDone ? "text-gray-500" : "text-gray-900"}`}
                   >
                     {task.title}
                   </h1>
@@ -115,9 +115,7 @@ export function TaskDetailPage() {
                 <h3 className="mb-3 text-lg font-semibold text-gray-900">
                   Description
                 </h3>
-                <p
-                  className={`text-gray-700 ${isDone ? "text-gray-400 line-through" : ""}`}
-                >
+                <p className={`text-gray-700 ${isDone ? "text-gray-400" : ""}`}>
                   {task.description}
                 </p>
               </div>
@@ -137,21 +135,6 @@ export function TaskDetailPage() {
                   <CardTitle className="text-lg">Dates</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Created Date */}
-                  {dateInfo.createdAt && (
-                    <div className="flex items-center gap-3">
-                      <CalendarIcon className="h-5 w-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          Created
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {dateInfo.createdAt.longFormatted}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
                   {/* Target Date */}
                   {dateInfo.targetDate && (
                     <div className="flex items-center gap-3">
@@ -168,6 +151,21 @@ export function TaskDetailPage() {
                             {dateInfo.targetDate.relative}
                           </p>
                         )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Created Date */}
+                  {dateInfo.createdAt && (
+                    <div className="flex items-center gap-3">
+                      <CalendarIcon className="h-5 w-5 text-gray-400" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Created
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {dateInfo.createdAt.longFormatted}
+                        </p>
                       </div>
                     </div>
                   )}
