@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router";
 import { Dashboard, Detail } from "@/pages";
 import SynapseLogo from "@/assets/synapse.svg";
 

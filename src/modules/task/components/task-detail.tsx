@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router";
 import { useTasks } from "@/modules/task/hooks/use-task";
 import {
   getStatusDisplay,
