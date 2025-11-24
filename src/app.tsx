@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Tasks } from "@/modules/task/components/tasks";
+import { Dashboard } from "@/pages";
 import SynapseLogo from "@/assets/synapse.svg";
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -26,7 +26,7 @@ export function App() {
           path="/"
           element={
             <Layout>
-              <Tasks />
+              <Dashboard />
             </Layout>
           }
         />

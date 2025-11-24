@@ -93,7 +93,7 @@ export function TaskItem({
                 {task.title}
               </h3>
 
-              {/* Category and Priority */}
+              {/* Category, Priority */}
               <div className="mt-1 flex flex-wrap items-center gap-1">
                 <span
                   className={`rounded-sm px-2 py-0.5 text-xs font-bold text-white ${categoryDisplay.bgColor}`}
@@ -105,28 +105,6 @@ export function TaskItem({
                 >
                   {priorityDisplay.label}
                 </span>
-                <div
-                  className={`flex w-fit items-center gap-1 rounded-full px-2 py-1 text-xs ${
-                    isDone
-                      ? "bg-green-100 text-green-700"
-                      : dateInfo.targetDate?.isPastDue
-                        ? "bg-red-100 text-red-700"
-                        : dateInfo.targetDate?.isToday
-                          ? "bg-amber-100 text-amber-700"
-                          : dateInfo.targetDate?.isYesterday
-                            ? "bg-purple-100 text-purple-700"
-                            : "bg-blue-100 text-blue-700"
-                  }`}
-                >
-                  <ClockIcon className="h-3.5 w-3.5" />
-                  <span className="font-medium">
-                    {isDone
-                      ? "Completed"
-                      : dateInfo.targetDate?.isPastDue
-                        ? "Overdue"
-                        : dateInfo.targetDate?.relative || "No due date"}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -178,25 +156,50 @@ export function TaskItem({
         )}
 
         {/* Metadata */}
-        <div className="space-y-2">
-          <div
-            className={`flex flex-wrap items-center gap-2 text-xs ${isDoneStyling}`}
-          >
-            {/* Created Date */}
-            {dateInfo.createdAt && (
-              <div className="flex items-center gap-1">
-                <CalendarIcon className="h-3.5 w-3.5" />
-                <span>Created {dateInfo.createdAt.formatted}</span>
-              </div>
-            )}
+        <div className="space-y-1">
+          {/* Created Date */}
+          {dateInfo.createdAt && (
+            <div className={`flex items-center gap-1 text-xs ${isDoneStyling}`}>
+              <CalendarIcon className="h-3.5 w-3.5" />
+              <span>Created {dateInfo.createdAt.formatted}</span>
+            </div>
+          )}
 
+          {/* Target Date & Duration*/}
+          <div className="flex items-center justify-between">
             {/* Target Date */}
             {dateInfo.targetDate && (
-              <div className="flex items-center gap-1">
+              <div
+                className={`flex items-center gap-1 text-xs ${isDoneStyling}`}
+              >
                 <TargetIcon className="h-3.5 w-3.5" />
                 <span>Target {dateInfo.targetDate?.formatted}</span>
               </div>
             )}
+
+            {/* Duration */}
+            <div
+              className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs ${
+                isDone
+                  ? "bg-green-100 text-green-700"
+                  : dateInfo.targetDate?.isPastDue
+                    ? "bg-red-100 text-red-700"
+                    : dateInfo.targetDate?.isToday
+                      ? "bg-amber-100 text-amber-700"
+                      : dateInfo.targetDate?.isYesterday
+                        ? "bg-purple-100 text-purple-700"
+                        : "bg-blue-100 text-blue-700"
+              }`}
+            >
+              <ClockIcon className="h-3.5 w-3.5" />
+              <span className="font-medium">
+                {isDone
+                  ? "Completed"
+                  : dateInfo.targetDate?.isPastDue
+                    ? "Overdue"
+                    : dateInfo.targetDate?.relative || "No due date"}
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
