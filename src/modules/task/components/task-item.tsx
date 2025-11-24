@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { Task, TaskItemProps } from "@/modules/task/types/task";
 import {
   getStatusDisplay,
@@ -35,6 +36,7 @@ export function TaskItem({
   onTaskEdit,
   onDelete,
 }: TaskItemProps) {
+  const navigate = useNavigate();
   const statusDisplay = getStatusDisplay(task.status);
   const priorityDisplay = getPriorityDisplay(task.priority);
   const categoryDisplay = getCategoryDisplay(task.category);
@@ -56,6 +58,11 @@ export function TaskItem({
 
   const handleEditClick = () => {
     onTaskEdit(task.id, {});
+    onCloseActionMenu();
+  };
+
+  const handleDetailClick = () => {
+    navigate(`/detail/${task.id}`);
     onCloseActionMenu();
   };
 
@@ -127,9 +134,9 @@ export function TaskItem({
                   onClick={onCloseActionMenu}
                 />
                 <div className="absolute top-7 right-0 z-20 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
-                  <Button variant="ghost" size="xs" onClick={onCloseActionMenu}>
+                  <Button variant="ghost" size="xs" onClick={handleDetailClick}>
                     <EyeIcon className="mr-2 h-3.5 w-3.5" />
-                    View
+                    Detail
                   </Button>
                   <Button variant="ghost" size="xs" onClick={handleEditClick}>
                     <PencilIcon className="mr-2 h-3.5 w-3.5" />
