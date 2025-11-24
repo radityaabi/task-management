@@ -32,8 +32,12 @@ export const useTasks = (
                 targetDate: task.targetDate
                   ? new Date(task.targetDate)
                   : undefined,
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                createdAt: task.createdAt
+                  ? new Date(task.createdAt)
+                  : new Date(),
+                updatedAt: task.updatedAt
+                  ? new Date(task.updatedAt)
+                  : new Date(),
               });
             } catch (error) {
               console.warn("Invalid task data found, skipping:", error);

@@ -23,7 +23,7 @@ import {
 export const getRelativeTime = (date: Date): string => {
   const now = new Date();
   const diffInDays = differenceInCalendarDays(date, now);
-  console.log(`Check beda hari ${diffInDays}`);
+  // console.log(`Check beda hari ${diffInDays}`);
 
   if (isToday(date)) return "Today";
   else if (isTomorrow(date)) return "Tomorrow";
