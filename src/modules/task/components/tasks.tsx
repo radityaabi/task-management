@@ -1,5 +1,5 @@
 import { useTasks } from "@/modules/task/hooks/use-task";
-import { sortTasks } from "@/modules/task/utils/task-helpers";
+// import { sortTasks } from "@/modules/task/utils/task-helpers";
 import { TaskList } from "@/modules/task/components/task-list";
 import { AddTask } from "@/modules/task/components/add-task";
 import { EditTask } from "@/modules/task/components/edit-task";
@@ -150,9 +150,9 @@ export function Tasks() {
                         </span>
                       </div>
 
-                      <div className={`h-2 w-full rounded-full ${bg}`}>
+                      <div className={`h-2 w-full rounded-sm ${bg}`}>
                         <div
-                          className={`${progress} h-2 rounded-full transition-all duration-300`}
+                          className={`${progress} h-2 rounded-sm transition-all duration-300`}
                           style={{ width: `${completionRate}%` }}
                         />
                       </div>
@@ -165,7 +165,7 @@ export function Tasks() {
         </Card>
 
         <TaskList
-          tasks={sortTasks(tasks)}
+          tasks={tasks}
           onTaskEdit={handleTaskEdit}
           onTaskDelete={deleteTask}
         />

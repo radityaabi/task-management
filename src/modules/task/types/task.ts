@@ -18,7 +18,7 @@ export const TaskStatusSchema = z.enum(["todo", "in-progress", "done"]);
 
 export const TaskSchema = z.object({
   id: z.number(),
-  title: z.string().min(1, "Title is required"),
+  title: z.string().min(3, "Title is required"),
   description: z.string(),
   category: TaskCategorySchema,
   priority: TaskPrioritySchema,

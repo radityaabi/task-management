@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import * as SelectPrimitive from "@radix-ui/react-select";
 import type { Task, TaskItemProps } from "@/modules/task/types/task";
 import {
   getStatusDisplay,
@@ -8,17 +9,10 @@ import {
 } from "@/modules/task/utils/task-helpers";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import {
   TrashIcon,
   EyeIcon,
-  CalendarIcon,
   ClockIcon,
   MoreVertical,
   CheckCircle2,
@@ -79,24 +73,47 @@ export function TaskItem({
         <div className="mb-3 flex items-start justify-between">
           <div className="flex items-start gap-2">
             {/* Status Icon */}
-            <div className={`mt-1 rounded-full p-1.5 ${statusDisplay.bgColor}`}>
-              <div className={statusDisplay.textColor}>
-                {statusDisplay.icon == "Circle" ? (
-                  <Circle className="h-4 w-4" />
-                ) : statusDisplay.icon == "PlayCircle" ? (
-                  <PlayCircle className="h-4 w-4" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-              </div>
+            <div className={`mt-1 rounded-sm p-1.5 ${statusDisplay.bgColor}`}>
+              <Select
+                value={task.status}
+                onValueChange={(value: Task["status"]) =>
+                  handleStatusChange(value)
+                }
+              >
+                <SelectPrimitive.Trigger className={statusDisplay.textColor}>
+                  {statusDisplay.icon == "Circle" ? (
+                    <Circle className="h-4 w-4" />
+                  ) : statusDisplay.icon == "PlayCircle" ? (
+                    <PlayCircle className="h-4 w-4" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4" />
+                  )}
+                </SelectPrimitive.Trigger>
+                <SelectContent>
+                  <SelectItem value="todo" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <Circle className="h-3 w-3" />
+                      To Do
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="in-progress" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <PlayCircle className="h-3 w-3" />
+                      In Progress
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="done" className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-3 w-3" />
+                      Done
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <h3
-                className={`text-base font-semibold uppercase ${
-                  isDone ? "text-gray-500 line-through" : "text-gray-900"
-                }`}
-              >
+              <h3 className={`text-base font-semibold text-gray-900`}>
                 {task.title}
               </h3>
 
@@ -164,14 +181,6 @@ export function TaskItem({
 
         {/* Metadata */}
         <div className="space-y-1">
-          {/* Created Date */}
-          {dateInfo.createdAt && (
-            <div className={`flex items-center gap-1 text-xs ${isDoneStyling}`}>
-              <CalendarIcon className="h-3.5 w-3.5" />
-              <span>Created {dateInfo.createdAt.formatted}</span>
-            </div>
-          )}
-
           {/* Target Date & Duration*/}
           <div className="flex items-center justify-between">
             {/* Target Date */}
@@ -186,7 +195,7 @@ export function TaskItem({
 
             {/* Duration */}
             <div
-              className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-xs ${
+              className={`flex items-center gap-1 rounded-sm px-3 py-1.5 text-xs ${
                 isDone
                   ? "bg-green-100 text-green-700"
                   : dateInfo.targetDate?.isPastDue
@@ -214,50 +223,13 @@ export function TaskItem({
       {/* Status Selector - Footer */}
       <CardFooter className="flex items-center justify-between border-t bg-gray-50 pt-2 [.border-t]:pt-2">
         <div className={`text-xs font-normal ${isDoneStyling}`}>
-          <div>Updated:</div>
-          <div className="mt-1">
+          <p className="mt-1">
+            Updated{" "}
             {dateInfo.updatedAt?.longFormatted ||
               dateInfo.createdAt?.longFormatted ||
               "Recently"}
-          </div>
+          </p>
         </div>
-
-        <Select
-          value={task.status}
-          onValueChange={(value: Task["status"]) => handleStatusChange(value)}
-        >
-          <SelectTrigger
-            className={`h-7 text-xs ${
-              task.status === "done"
-                ? "border-green-300 bg-green-50 text-green-700"
-                : task.status === "in-progress"
-                  ? "border-blue-300 bg-blue-50 text-blue-700"
-                  : "border-gray-300 bg-gray-50 text-gray-700"
-            }`}
-          >
-            <SelectValue placeholder="Select status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todo" className="text-xs">
-              <div className="flex items-center gap-2">
-                <Circle className="h-3 w-3" />
-                To Do
-              </div>
-            </SelectItem>
-            <SelectItem value="in-progress" className="text-xs">
-              <div className="flex items-center gap-2">
-                <PlayCircle className="h-3 w-3" />
-                In Progress
-              </div>
-            </SelectItem>
-            <SelectItem value="done" className="text-xs">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-3 w-3" />
-                Done
-              </div>
-            </SelectItem>
-          </SelectContent>
-        </Select>
       </CardFooter>
     </Card>
   );

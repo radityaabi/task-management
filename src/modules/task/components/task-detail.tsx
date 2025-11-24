@@ -82,12 +82,12 @@ export function TaskDetailPage() {
             {/* Task Header */}
             <div className="mb-6 flex items-start justify-between">
               <div className="flex items-start gap-3">
-                <div className={`rounded-full p-2 ${statusDisplay.bgColor}`}>
+                <div className={`rounded-sm p-2 ${statusDisplay.bgColor}`}>
                   <div className={statusDisplay.textColor}>{statusIcon}</div>
                 </div>
                 <div>
                   <h1
-                    className={`text-2xl font-bold uppercase ${isDone ? "text-gray-500 line-through" : "text-gray-900"}`}
+                    className={`text-2xl font-bold ${isDone ? "text-gray-500" : "text-gray-900"}`}
                   >
                     {task.title}
                   </h1>
@@ -115,9 +115,7 @@ export function TaskDetailPage() {
                 <h3 className="mb-3 text-lg font-semibold text-gray-900">
                   Description
                 </h3>
-                <p
-                  className={`text-gray-700 ${isDone ? "text-gray-400 line-through" : ""}`}
-                >
+                <p className={`text-gray-700 ${isDone ? "text-gray-400" : ""}`}>
                   {task.description}
                 </p>
               </div>
@@ -137,21 +135,6 @@ export function TaskDetailPage() {
                   <CardTitle className="text-lg">Dates</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Created Date */}
-                  {dateInfo.createdAt && (
-                    <div className="flex items-center gap-3">
-                      <CalendarIcon className="h-5 w-5 text-gray-400" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          Created
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {dateInfo.createdAt.longFormatted}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
                   {/* Target Date */}
                   {dateInfo.targetDate && (
                     <div className="flex items-center gap-3">
@@ -168,6 +151,21 @@ export function TaskDetailPage() {
                             {dateInfo.targetDate.relative}
                           </p>
                         )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Created Date */}
+                  {dateInfo.createdAt && (
+                    <div className="flex items-center gap-3">
+                      <CalendarIcon className="h-5 w-5 text-gray-400" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Created
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {dateInfo.createdAt.longFormatted}
+                        </p>
                       </div>
                     </div>
                   )}
@@ -199,9 +197,7 @@ export function TaskDetailPage() {
                 <CardContent className="space-y-4">
                   {/* Status */}
                   <div className="flex items-center gap-3">
-                    <div
-                      className={`rounded-full p-2 ${statusDisplay.bgColor}`}
-                    >
+                    <div className={`rounded-sm p-2 ${statusDisplay.bgColor}`}>
                       <div className={statusDisplay.textColor}>
                         {statusIcon}
                       </div>
@@ -217,7 +213,7 @@ export function TaskDetailPage() {
                   {/* Priority */}
                   <div className="flex items-center gap-3">
                     <div
-                      className={`rounded-full p-2 ${priorityDisplay.bgColor}`}
+                      className={`rounded-sm p-2 ${priorityDisplay.bgColor}`}
                     >
                       <div className={priorityDisplay.textColor}></div>
                     </div>
@@ -234,7 +230,7 @@ export function TaskDetailPage() {
                   {/* Category */}
                   <div className="flex items-center gap-3">
                     <div
-                      className={`rounded-full p-2 ${categoryDisplay.bgColor}`}
+                      className={`rounded-sm p-2 ${categoryDisplay.bgColor}`}
                     ></div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">
