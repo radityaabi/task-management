@@ -80,26 +80,6 @@ export function TaskDetailPage() {
   const dateInfo = getDateDisplayInfo(task);
   const isDone = task.status === "done";
 
-  const ActionButton = (
-    <div className="relative">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-7 w-7 p-0 text-gray-400 hover:text-gray-600"
-        onClick={handleActionClick}
-      >
-        <MoreVertical className="h-3.5 w-3.5" />
-      </Button>
-
-      <TaskActionMenu
-        isOpen={isActionMenuOpen}
-        onClose={handleCloseActionMenu}
-        onEdit={handleEditClick}
-        onDelete={() => handleDeleteClick(task.id)}
-      />
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-4xl">
@@ -132,7 +112,16 @@ export function TaskDetailPage() {
                 <TaskHeader
                   task={task}
                   titleSize="lg"
-                  actionMenu={ActionButton}
+                  actionMenu={
+                    <ActionButton
+                      isOpen={isActionMenuOpen}
+                      onOpen={handleActionClick}
+                      onClose={handleCloseActionMenu}
+                      onEdit={handleEditClick}
+                      onDelete={() => handleDeleteClick(task.id)}
+                      taskId={task.id}
+                    />
+                  }
                 />
               </div>
             </div>
@@ -276,6 +265,44 @@ export function TaskDetailPage() {
           />
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+type ActionButtonProps = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: (taskId: number) => void;
+  taskId: number;
+};
+
+export function ActionButton({
+  isOpen,
+  onOpen,
+  onClose,
+  onEdit,
+  onDelete,
+  taskId,
+}: ActionButtonProps) {
+  return (
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-7 w-7 p-0 text-gray-400 hover:text-gray-600"
+        onClick={onOpen}
+      >
+        <MoreVertical className="h-3.5 w-3.5" />
+      </Button>
+
+      <TaskActionMenu
+        isOpen={isOpen}
+        onClose={onClose}
+        onEdit={onEdit}
+        onDelete={() => onDelete(taskId)}
+      />
     </div>
   );
 }

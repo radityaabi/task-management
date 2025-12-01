@@ -108,6 +108,7 @@ export const useTasks = (
       return;
     }
 
+    // TODO: Remove window.confirm
     const confirmed = window.confirm(
       `Are you sure you want to delete task "${taskToDelete.title}"?\n\nThis action cannot be undone.`,
     );

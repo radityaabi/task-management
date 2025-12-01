@@ -9,7 +9,6 @@ export function TaskActionMenu({
   onDelete,
   onViewDetail,
   showViewDetail = false,
-  position = "top-7 right-0",
 }: TaskActionMenuProps) {
   if (!isOpen) return null;
 
@@ -17,7 +16,7 @@ export function TaskActionMenu({
     <>
       <div className="fixed inset-0 z-10" onClick={onClose} />
       <div
-        className={`absolute ${position} z-20 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg`}
+        className={`absolute z-20 min-w-[120px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg`}
       >
         {showViewDetail && onViewDetail && (
           <Button

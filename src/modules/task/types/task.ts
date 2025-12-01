@@ -62,7 +62,6 @@ export interface TaskActionMenuProps {
   onDelete: () => void;
   onViewDetail?: () => void;
   showViewDetail?: boolean;
-  position?: "top-7 right-0" | string;
 }
 
 export interface UseTaskActionsProps {

@@ -32,6 +32,7 @@ export function useTaskActions({
   };
 
   const handleDeleteClick = (taskId: number) => {
+    // TODO: Remove window.confirm
     if (window.confirm("Are you sure you want to delete this task?")) {
       onDelete?.(taskId);
     }
