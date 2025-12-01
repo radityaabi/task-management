@@ -29,9 +29,7 @@ export const useTasks = (
             try {
               return TaskSchema.parse({
                 ...task,
-                targetDate: task.targetDate
-                  ? new Date(task.targetDate)
-                  : undefined,
+                targetDate: task.targetDate ? new Date(task.targetDate) : null,
                 createdAt: task.createdAt
                   ? new Date(task.createdAt)
                   : new Date(),
