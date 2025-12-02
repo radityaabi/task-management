@@ -42,7 +42,7 @@ import { MoreVertical } from "lucide-react";
 export function TaskDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tasks, edit, delete: deleteTask } = useTasks();
+  const { tasks, edit: editTask, delete: deleteTask } = useTasks();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const task = tasks.find((task) => task.id === parseInt(id || "0", 10));
@@ -84,7 +84,7 @@ export function TaskDetail() {
   }[task.status];
 
   const handleEdit = (data: TaskInput) => {
-    edit(task.id, data);
+    editTask(task.id, data);
     setIsEditDialogOpen(false);
   };
 
@@ -122,7 +122,7 @@ export function TaskDetail() {
                     <Select
                       value={task.status}
                       onValueChange={(newStatus: TaskStatus) =>
-                        edit(task.id, { ...task, status: newStatus })
+                        editTask(task.id, { ...task, status: newStatus })
                       }
                     >
                       <SelectPrimitive.Trigger

@@ -14,7 +14,12 @@ import {
 import { Plus } from "lucide-react";
 
 export function TasksPage() {
-  const { tasks, add, edit, delete: deleteTask } = useTasks();
+  const {
+    tasks,
+    add: addTask,
+    edit: editTask,
+    delete: deleteTask,
+  } = useTasks();
 
   const [dialog, setDialog] = useState<{
     open: boolean;
@@ -23,9 +28,9 @@ export function TasksPage() {
 
   const handleSave = (data: TaskInput) => {
     if (dialog.task) {
-      edit(dialog.task.id, data);
+      editTask(dialog.task.id, data);
     } else {
-      add(data);
+      addTask(data);
     }
     setDialog({ open: false });
   };
@@ -47,7 +52,7 @@ export function TasksPage() {
       {/* Task List */}
       <TaskList
         tasks={tasks}
-        onEdit={edit}
+        onEdit={editTask}
         onDelete={deleteTask}
         onOpenEdit={(task) => setDialog({ open: true, task })}
       />
