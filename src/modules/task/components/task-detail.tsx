@@ -45,7 +45,7 @@ export function TaskDetail() {
   const { tasks, edit, delete: deleteTask } = useTasks();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const task = tasks.find((t) => t.id === parseInt(id || "0", 10));
+  const task = tasks.find((task) => task.id === parseInt(id || "0", 10));
 
   useEffect(() => {
     window.scrollTo(0, 0);

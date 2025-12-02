@@ -69,11 +69,11 @@ export const useTasks = (): UseTasksReturn => {
   // Delete task
   const deleteTask = useCallback((id: number) => {
     setTasks((currentTasks) => {
-      const task = currentTasks.find((t) => t.id === id);
+      const task = currentTasks.find((task) => task.id === id);
       if (!task) return currentTasks;
 
       if (window.confirm(`Delete "${task.title}"?`)) {
-        return currentTasks.filter((t) => t.id !== id);
+        return currentTasks.filter((task) => task.id !== id);
       }
       return currentTasks;
     });
