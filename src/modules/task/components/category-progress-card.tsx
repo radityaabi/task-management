@@ -1,9 +1,37 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  calculateCategoryStats,
-  getCategoryColors,
-} from "@/modules/dashboard/utils/task-stats";
-import type { CategoryProgressCardProps } from "@/modules/dashboard/types/dashboard";
+import { getCategoryDisplay } from "@/modules/task/utils/task-helpers";
+import type { Task, TaskCategory } from "@/modules/task/types/task";
+
+interface CategoryProgressCardProps {
+  tasks: Task[];
+}
+
+interface CategoryStats {
+  [key: string]: {
+    completed: number;
+    total: number;
+  };
+}
+
+function calculateCategoryStats(tasks: Task[]): CategoryStats {
+  const stats: CategoryStats = {};
+
+  tasks.forEach((task) => {
+    const category = task.category;
+
+    if (!stats[category]) {
+      stats[category] = { completed: 0, total: 0 };
+    }
+
+    stats[category].total += 1;
+
+    if (task.status === "done") {
+      stats[category].completed += 1;
+    }
+  });
+
+  return stats;
+}
 
 export function CategoryProgressCard({ tasks }: CategoryProgressCardProps) {
   const categoryStats = calculateCategoryStats(tasks);
@@ -31,22 +59,26 @@ export function CategoryProgressCard({ tasks }: CategoryProgressCardProps) {
           {Object.entries(categoryStats).map(
             ([category, { completed, total }]) => {
               const completionRate = Math.round((completed / total) * 100);
-              const { bg, progress } = getCategoryColors(category);
+              const categoryDisplay = getCategoryDisplay(
+                category as TaskCategory,
+              );
 
               return (
-                <div key={category} className="space-y-1">
+                <div key={category} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-gray-700">
                       {category}
                     </span>
-                    <span className="text-sm text-gray-600">
-                      {completed}/{total}
+                    <span className="text-xs text-gray-600">
+                      {completed}/{total} ({completionRate}%)
                     </span>
                   </div>
 
-                  <div className={`h-2 w-full rounded-sm ${bg}`}>
+                  <div
+                    className={`h-2 w-full rounded-full ${categoryDisplay.progressBgColor}`}
+                  >
                     <div
-                      className={`${progress} h-2 rounded-sm transition-all duration-300`}
+                      className={`${categoryDisplay.progress} h-2 rounded-full transition-all duration-300`}
                       style={{ width: `${completionRate}%` }}
                     />
                   </div>

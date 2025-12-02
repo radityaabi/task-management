@@ -1,65 +1,59 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useTasks } from "@/modules/task/hooks/use-task";
+import { useTasks } from "@/modules/task/hooks/use-tasks";
 import {
   getDateDisplayInfo,
   getPriorityDisplay,
   getCategoryDisplay,
+  getStatusDisplay,
 } from "@/modules/task/utils/task-helpers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   CalendarIcon,
   ClockIcon,
-  TargetIcon,
-  ArrowLeftIcon,
-  MoreVertical,
+  Target,
+  ArrowLeft,
+  Edit,
+  Trash2,
+  Circle,
+  PlayCircle,
+  CheckCircle2,
 } from "lucide-react";
-import { CountdownTimer } from "../components/countdown-timer";
+import { CountdownTimer } from "@/modules/task/components/countdown-timer";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { EditTask } from "../components/edit-task";
-import { useEffect } from "react";
-import { useTaskActions } from "../hooks/use-task-actions";
-import { TaskActionMenu } from "../components/task-action-menu";
-import { TaskStatusSelector } from "../components/task-status-selector";
-import { TaskHeader } from "../components/task-header";
+import { TaskForm } from "@/modules/task/components/task-form";
+import type { TaskStatus, TaskInput } from "@/modules/task/types/task";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreVertical } from "lucide-react";
 
-export function TaskDetailPage() {
-  const { taskId } = useParams<{ taskId: string }>();
+export function TaskDetail() {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tasks, editTask, deleteTask } = useTasks();
+  const { tasks, edit, delete: deleteTask } = useTasks();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  const task = tasks.find((t) => t.id === parseInt(taskId || "0"));
-
-  const {
-    isActionMenuOpen,
-    isEditDialogOpen,
-    handleActionClick,
-    handleCloseActionMenu,
-    handleEditClick,
-    handleEditCancel,
-    handleTaskEdited,
-    handleDeleteClick,
-    handleStatusChange,
-  } = useTaskActions({
-    onTaskEdit: editTask,
-    onDelete: (taskId) => {
-      deleteTask(taskId);
-      navigate("/");
-    },
-  });
+  const task = tasks.find((t) => t.id === parseInt(id || "0", 10));
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [taskId]);
+  }, [id]);
 
   if (!task) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -79,72 +73,162 @@ export function TaskDetailPage() {
 
   const dateInfo = getDateDisplayInfo(task);
   const isDone = task.status === "done";
+  const statusDisplay = getStatusDisplay(task.status);
+  const priorityDisplay = getPriorityDisplay(task.priority);
+  const categoryDisplay = getCategoryDisplay(task.category);
 
-  const ActionButton = (
-    <div className="relative">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-7 w-7 p-0 text-gray-400 hover:text-gray-600"
-        onClick={handleActionClick}
-      >
-        <MoreVertical className="h-3.5 w-3.5" />
-      </Button>
+  const StatusIcon = {
+    todo: Circle,
+    "in-progress": PlayCircle,
+    done: CheckCircle2,
+  }[task.status];
 
-      <TaskActionMenu
-        isOpen={isActionMenuOpen}
-        onClose={handleCloseActionMenu}
-        onEdit={handleEditClick}
-        onDelete={() => handleDeleteClick(task.id)}
-      />
-    </div>
-  );
+  const handleEdit = (data: TaskInput) => {
+    edit(task.id, data);
+    setIsEditDialogOpen(false);
+  };
+
+  const handleDelete = () => {
+    deleteTask(task.id);
+    navigate("/");
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="mx-auto max-w-4xl">
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate("/")}
             className="flex items-center gap-2 hover:bg-gray-100"
           >
-            <ArrowLeftIcon className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Back to Tasks
           </Button>
         </div>
 
-        <Card className="mb-4 p-4 shadow-sm">
-          <CardContent className="p-4">
+        <Card className="mb-4 shadow-sm">
+          <CardContent className="p-6">
             {/* Task Header */}
-            <div className="mb-4 flex items-start gap-3">
-              <div className="shrink-0">
-                <TaskStatusSelector
-                  task={task}
-                  onStatusChange={handleStatusChange}
-                  size="lg"
-                />
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div className="flex min-w-0 flex-1 items-start gap-4">
+                {/* Status Selector (sama persis seperti di TaskItem) */}
+                <div className="mt-1 shrink-0">
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-full shadow-md ${statusDisplay.bgColor}`}
+                  >
+                    <Select
+                      value={task.status}
+                      onValueChange={(newStatus: TaskStatus) =>
+                        edit(task.id, { ...task, status: newStatus })
+                      }
+                    >
+                      <SelectPrimitive.Trigger
+                        className={`h-full w-full ${statusDisplay.textColor} cursor-pointer rounded-full transition hover:opacity-80`}
+                      >
+                        <div className="flex h-full w-full items-center justify-center">
+                          <StatusIcon className="h-9 w-9" />
+                        </div>
+                      </SelectPrimitive.Trigger>
+                      <SelectContent>
+                        <SelectItem value="todo">
+                          <div className="flex items-center gap-3">
+                            <Circle className="h-4 w-4" />
+                            <span>To Do</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="in-progress">
+                          <div className="flex items-center gap-3">
+                            <PlayCircle className="h-4 w-4" />
+                            <span>In Progress</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="done">
+                          <div className="flex items-center gap-3">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <span>Done</span>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h1
+                    className={`text-2xl font-bold ${isDone ? "text-gray-400" : "text-gray-900"}`}
+                  >
+                    {task.title}
+                  </h1>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span
+                      className={`rounded px-3 py-1 text-xs font-bold text-white ${categoryDisplay.bgColor}`}
+                    >
+                      {task.category}
+                    </span>
+                    <span
+                      className={`rounded px-3 py-1 text-xs font-bold ${priorityDisplay.bgColor} ${priorityDisplay.textColor}`}
+                    >
+                      {priorityDisplay.label}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="min-w-0 flex-1">
-                <TaskHeader
-                  task={task}
-                  titleSize="lg"
-                  actionMenu={ActionButton}
-                />
+              {/* Action Buttons */}
+              <div className="hidden gap-1 sm:flex">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsEditDialogOpen(true)}
+                  className="h-8 w-8 p-0"
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleDelete}
+                  className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="flex sm:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Task
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleDelete}
+                      className="text-red-600 focus:text-red-600"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete Task
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
             {/* Description */}
             {task.description && (
-              <div className="mb-4">
+              <div className="mb-6">
                 <h3 className="mb-2 text-base font-semibold text-gray-900">
                   Description
                 </h3>
                 <p
-                  className={`rounded-md bg-gray-50 p-3 text-sm text-gray-700 ${isDone ? "text-gray-400" : ""}`}
+                  className={`rounded-md bg-gray-50 p-4 text-sm ${isDone ? "text-gray-400" : "text-gray-700"}`}
                 >
                   {task.description}
                 </p>
@@ -153,35 +237,34 @@ export function TaskDetailPage() {
 
             {/* Countdown Timer */}
             {task.targetDate && (
-              <div className="mb-4">
+              <div className="mb-6">
                 <CountdownTimer targetDate={task.targetDate} isDone={isDone} />
               </div>
             )}
 
             {/* Metadata Grid */}
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {/* Dates Section */}
-              <Card className="gap-1 border shadow-sm">
-                <CardHeader>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              {/* Dates */}
+              <Card className="border shadow-sm">
+                <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
                     <CalendarIcon className="h-4 w-4 text-gray-500" />
                     Dates & Timeline
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  {/* Target Date */}
+                <CardContent className="space-y-3">
                   {dateInfo.targetDate && (
-                    <div className="flex items-center gap-2 p-2">
-                      <TargetIcon className="h-4 w-4 text-gray-500" />
+                    <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                      <Target className="mt-0.5 h-4 w-4 text-blue-600" />
                       <div className="flex-1">
                         <p className="text-sm font-medium text-gray-900">
                           Target Date
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="mt-0.5 text-sm text-gray-600">
                           {dateInfo.targetDate.longFormatted}
                         </p>
                         {dateInfo.targetDate.relative && (
-                          <p className="mt-0.5 text-xs font-medium text-blue-600">
+                          <p className="mt-1 text-xs font-medium text-blue-600">
                             {dateInfo.targetDate.relative}
                           </p>
                         )}
@@ -189,33 +272,29 @@ export function TaskDetailPage() {
                     </div>
                   )}
 
-                  {/* Created Date */}
                   {dateInfo.createdAt && (
-                    <div className="flex items-center gap-2 p-2">
-                      <CalendarIcon className="h-4 w-4 text-gray-500" />
+                    <div className="flex items-start gap-3 p-3">
+                      <CalendarIcon className="mt-0.5 h-4 w-4 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium text-gray-900">
                           Created
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="mt-0.5 text-sm text-gray-600">
                           {dateInfo.createdAt.longFormatted}
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* Last Updated */}
                   {dateInfo.updatedAt && (
-                    <div className="flex items-center gap-2 p-2">
-                      <ClockIcon className="h-4 w-4 text-gray-500" />
+                    <div className="flex items-start gap-3 p-3">
+                      <ClockIcon className="mt-0.5 h-4 w-4 text-gray-500" />
                       <div>
                         <p className="text-sm font-medium text-gray-900">
                           Last Updated
                         </p>
-                        <p className="text-sm text-gray-600">
-                          {dateInfo.updatedAt.longFormatted ||
-                            dateInfo.createdAt?.longFormatted ||
-                            "Recently"}
+                        <p className="mt-0.5 text-sm text-gray-600">
+                          {dateInfo.updatedAt.longFormatted || "Recently"}
                         </p>
                       </div>
                     </div>
@@ -223,37 +302,37 @@ export function TaskDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Task Details */}
-              <Card className="gap-1 border shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-base">Task Details</CardTitle>
+              {/* Task Info */}
+              <Card className="border shadow-sm">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Task Information</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  {/* Priority */}
-                  <div className="flex items-center gap-2 p-2">
+                <CardContent className="space-y-3">
+                  <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
                     <div
-                      className={`rounded-full p-1.5 ${getPriorityDisplay(task.priority).bgColor}`}
+                      className={`mt-1 h-3 w-3 rounded-full ${priorityDisplay.bgColor}`}
                     />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-900">
                         Priority
                       </p>
-                      <p className="text-sm text-gray-600">
-                        {getPriorityDisplay(task.priority).label}
+                      <p className="mt-0.5 text-sm text-gray-600">
+                        {priorityDisplay.label} Priority
                       </p>
                     </div>
                   </div>
 
-                  {/* Category */}
-                  <div className="flex items-center gap-2 p-2">
+                  <div className="flex items-start gap-3 p-3">
                     <div
-                      className={`rounded-full p-1.5 ${getCategoryDisplay(task.category).bgColor}`}
+                      className={`mt-1 h-3 w-3 rounded-full ${categoryDisplay.bgColor}`}
                     />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-900">
                         Category
                       </p>
-                      <p className="text-sm text-gray-600">{task.category}</p>
+                      <p className="mt-0.5 text-sm text-gray-600">
+                        {task.category}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -263,16 +342,16 @@ export function TaskDetailPage() {
         </Card>
       </div>
 
-      {/* Edit Task Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={handleEditCancel}>
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Task</DialogTitle>
           </DialogHeader>
-          <EditTask
+          <TaskForm
             task={task}
-            onTaskEdited={handleTaskEdited}
-            onCancel={handleEditCancel}
+            onSave={handleEdit}
+            onCancel={() => setIsEditDialogOpen(false)}
           />
         </DialogContent>
       </Dialog>

@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// ============================================================================
+// SCHEMAS
+// ============================================================================
+
 export const TaskCategorySchema = z.enum([
   "Work",
   "Personal",
@@ -19,7 +23,7 @@ export const TaskStatusSchema = z.enum(["todo", "in-progress", "done"]);
 export const TaskSchema = z.object({
   id: z.number(),
   title: z.string().min(3, "Title is required"),
-  description: z.string(),
+  description: z.string().default(""),
   category: TaskCategorySchema,
   priority: TaskPrioritySchema,
   status: TaskStatusSchema,
@@ -28,97 +32,49 @@ export const TaskSchema = z.object({
   updatedAt: z.date(),
 });
 
-export const CreateTaskSchema = TaskSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  targetDate: z.date().optional(),
-});
-export const UpdateTaskSchema = CreateTaskSchema.partial();
+// ============================================================================
+// TYPES
+// ============================================================================
+
+export type Task = z.infer<typeof TaskSchema>;
+export type TaskInput = Omit<Task, "id" | "createdAt" | "updatedAt">;
+export type TaskUpdate = Partial<TaskInput>;
 
 export type TaskCategory = z.infer<typeof TaskCategorySchema>;
 export type TaskPriority = z.infer<typeof TaskPrioritySchema>;
 export type TaskStatus = z.infer<typeof TaskStatusSchema>;
-export type Task = z.infer<typeof TaskSchema>;
-export type CreateTaskData = z.infer<typeof CreateTaskSchema>;
-export type UpdateTaskInput = z.infer<typeof UpdateTaskSchema>;
 
-export interface AddTaskProps {
-  onTaskAdded: (task: CreateTaskData) => void;
+// ============================================================================
+// COMPONENT PROPS
+// ============================================================================
+
+export interface TaskFormProps {
+  task?: Task;
+  onSave: (data: TaskInput) => void;
   onCancel: () => void;
-}
-
-export interface EditTaskProps {
-  task: Task;
-  onTaskEdited: (taskId: number, updates: Partial<Task>) => void;
-  onCancel: () => void;
-}
-
-export interface TaskActionMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  onViewDetail?: () => void;
-  showViewDetail?: boolean;
-  position?: "top-7 right-0" | string;
-}
-
-export interface UseTaskActionsProps {
-  onTaskEdit?: (taskId: number, updates: Partial<Task>) => void;
-  onDelete?: (taskId: number) => void;
-}
-
-export interface TaskFormFieldsProps {
-  dateTime?: Date;
-  onDateTimeChange: (date: Date | undefined) => void;
-  onTimeChange: (hours: number, minutes: number) => void;
-  defaultTitle?: string;
-  defaultDescription?: string;
-  defaultCategory?: string;
-  defaultPriority?: string;
-  defaultStatus?: string;
-}
-
-export interface UseTaskFormProps {
-  initialDateTime?: Date;
-}
-
-export interface TaskHeaderProps {
-  task: Task;
-  titleSize?: "sm" | "md" | "lg";
-  showActionButton?: boolean;
-  onActionClick?: () => void;
-  actionMenu?: React.ReactNode;
-}
-
-export interface TaskStatusSelectorProps {
-  task: Task;
-  onStatusChange: (taskId: number, newStatus: Task["status"]) => void;
-  size?: "sm" | "md" | "lg";
 }
 
 export interface TaskItemProps {
   task: Task;
-  isActionMenuOpen: boolean;
-  onToggleActionMenu: () => void;
-  onCloseActionMenu: () => void;
-  onTaskEdit: (taskId: number, updates: Partial<Task>) => void;
-  onDelete: () => void;
-  onEdit: (taskId: number) => void;
+  onEdit: (id: number, data: Partial<Task>) => void;
+  onDelete: (id: number) => void;
+  onOpenEdit: (task: Task) => void;
 }
 
 export interface TaskListProps {
   tasks: Task[];
-  onTaskEdit: (taskId: number, updates: Partial<Task>) => void;
-  onTaskDelete: (taskId: number) => void;
-  onEdit: (taskId: number) => void;
+  onEdit: (id: number, data: Partial<Task>) => void;
+  onDelete: (id: number) => void;
+  onOpenEdit: (task: Task) => void;
 }
 
-export interface TasksHook {
+// ============================================================================
+// HOOK RETURN
+// ============================================================================
+
+export interface UseTasksReturn {
   tasks: Task[];
-  addTask: (task: CreateTaskData) => void;
-  editTask: (taskId: number, updates: Partial<Task>) => void;
-  deleteTask: (taskId: number) => void;
+  add: (data: TaskInput) => void;
+  edit: (id: number, data: Partial<Task>) => void;
+  delete: (id: number) => void;
 }

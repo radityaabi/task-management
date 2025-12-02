@@ -1,4 +1,0 @@
-export { TaskItem } from "./task-item";
-export { TaskList } from "./task-list";
-export { AddTask } from "./add-task";
-export { EditTask } from "./edit-task";

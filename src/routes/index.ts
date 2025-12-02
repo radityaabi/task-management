@@ -1,2 +1,2 @@
 export { Dashboard } from "./dashboard";
-export { Detail } from "./detail";
+export { DetailTask } from "./detail";
